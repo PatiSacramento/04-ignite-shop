@@ -6,8 +6,6 @@ import { stripe } from "../lib/stripe"
 import { GetStaticProps } from "next"
 import Stripe from "stripe"
 
-
-
 interface HomeProps {
   products: {
     id: string;
@@ -29,17 +27,17 @@ export default function Home({ products }: HomeProps) {
     <HomeContainer ref={sliderRef} className='keen-slider'>
       {products.map(product => {
         return (
-          <Product key={product.id} className="keen-slider__slide">
+          <Product className="keen-slider__slide" key={product.id} href={`/product/${product.id}`}>
             <Image src={product.imageUrl} alt="" width={520} height={480} />
 
             <footer>
               <strong>{product.name}</strong>
               <span>{product.price}</span>
             </footer>
+
           </Product>
         )
       })}
-
 
     </HomeContainer>
   )
@@ -49,7 +47,7 @@ export default function Home({ products }: HomeProps) {
 // com getStaticProps não temos acesso ao contexto da requisição. Ele é executado na build.
 // páginas estáticas são iguais para todos os usuários que acessarem. Se precisa de alguma informação dinâmica, tipo id de usuário, não funcionará. 
 
-export const getStaticProps: GetStaticProps = async () => { 
+export const getStaticProps: GetStaticProps = async () => {
   const response = await stripe.products.list({
     expand: ['data.default_price']
   })
